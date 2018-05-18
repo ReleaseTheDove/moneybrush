@@ -7,21 +7,20 @@ from lxml import etree
 import urllib.parse
 
 from log import logger
-
+from models import UserAgent, connectdb
 
 class WIMBCrawler(object):
-    """ 抓取whatismybrowser的各种user-agent, 并且存入数据库 """
-
+    """Crawl UA info on web-site: whatismybrowser, and save into mongodb."""
     site = 'https://developers.whatismybrowser.com'
     s = requests.Session()
 
     @classmethod
     def get_sorfware_urls(cls):
-        """ 获取个浏览器种类url """
+        """Return detail page urls"""
         url = urllib.parse.urljoin(cls.site, '/useragents/explore/')
         r = cls.s.get(url)
         if r.status_code != 200:
-            logger.error('请求页面失败')
+            logger.error('Request homepage failed.')
             return []
         selector = etree.HTML(r.text)
         hrefs = selector.xpath('//a[contains(text(), "Software:")]/../../ul/li/a/@href')
@@ -29,19 +28,23 @@ class WIMBCrawler(object):
 
     @classmethod
     def get_detail_by_url(cls, url):
-        """ 获取指定浏览器user-agent信息 """
+        connectdb()
+        """Save UA info from specific url."""
         def crawl_page(url):
-            """ 爬取当前页信息 """
             r = cls.s.get(url)
             selector = etree.HTML(r.text)
             trs = selector.xpath('//tbody/tr')
             for tr in trs:
                 tds = tr.xpath('./td')
-                # TODO: 改成写数据库
-                print({
-                    'useragent': tds[0].xpath('a/text()')[0],
-                    'version': tds[1].text, 'os': tds[2].text,
-                    'hardwaretype': tds[3].text, 'popularity': tds[4].text})
+                try:
+                    user_agent = UserAgent({
+                        'name': tds[0].xpath('a/text()')[0],
+                        'version': tds[1].text, 'os': tds[2].text,
+                        'hardwaretype': tds[3].text, 'popularity': tds[4].text})
+                    user_agent.upsert()
+                    logger.info(f'Upsert agentinfo {user_agent.name}')
+                except Exception as e:
+                    logger.error(str(e))
             return selector
 
         selector = crawl_page(url)
@@ -55,12 +58,12 @@ class WIMBCrawler(object):
 
 if __name__ == '__main__':
     urls = WIMBCrawler.get_sorfware_urls()
-    logger.info('获取到所有详细页面url')
+    logger.info('Got all detail page url.')
     ps = []
     for url in urls:
         p = multiprocessing.Process(target=WIMBCrawler.get_detail_by_url, args=(url, ))
         p.start()
         ps.append(p)
-        logger.info(f'开始抓取url: {url}页面信息')
-    logger.info('等待进程完成')
+        logger.info(f'Start crawling detail page: {url}.')
     [p.join() for p in ps]
+    logger.info('its ok.')

@@ -5,7 +5,7 @@ import inspect
 import logbook
 from logbook import Logger,TimedRotatingFileHandler
 from logbook.more import ColorizedStderrHandler
-
+from logbook.base import ERROR
 
 def log_type(record,handler):
     log = "[{date}] [{level}] [{filename}] [{func_name}] [{lineno}] {msg}".format(
@@ -27,18 +27,19 @@ log_std = ColorizedStderrHandler()
 log_std.formatter = log_type
 
 log_file = TimedRotatingFileHandler(
-    os.path.join(LOG_DIR, '%s.log' % 'log'), date_format='%Y-%m-%d', bubble=True, encoding='utf-8')
+    os.path.join(LOG_DIR, '%s.log' % 'log'), date_format='%Y-%m-%d', bubble=True, encoding='utf-8', level=ERROR)
 log_file.formatter = log_type
 
 
-def init_logger(outputfile=False):
-    """ 默认不开启日志写入文件 """
+def init_logger():
+    """Write error info log file as default.
+    Return the distance of logbook logger.
+    """
     filename = inspect.getframeinfo(inspect.currentframe().f_back).filename
     logger = Logger(filename)
     logbook.set_datetime_format("local")
     logger.handlers = []
-    if outputfile:
-        logger.handlers.append(log_file)
+    logger.handlers.append(log_file)
     logger.handlers.append(log_std)
     return logger
 
