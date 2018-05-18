@@ -16,7 +16,7 @@ class WIMBCrawler(object):
 
     @classmethod
     def get_sorfware_urls(cls):
-        """Return detail page urls"""
+        """Return detail page urls."""
         url = urllib.parse.urljoin(cls.site, '/useragents/explore/')
         r = cls.s.get(url)
         if r.status_code != 200:
@@ -42,9 +42,9 @@ class WIMBCrawler(object):
                         'version': tds[1].text, 'os': tds[2].text,
                         'hardwaretype': tds[3].text, 'popularity': tds[4].text})
                     user_agent.upsert()
-                    logger.info(f'Upsert agentinfo {user_agent.name}')
                 except Exception as e:
                     logger.error(str(e))
+            logger.info(f'Crawled page: {url}, number of record: {len(trs)}.')
             return selector
 
         selector = crawl_page(url)
