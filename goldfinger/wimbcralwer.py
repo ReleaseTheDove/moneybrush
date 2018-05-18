@@ -1,9 +1,13 @@
 import re
+from concurrent.futures import ThreadPoolExecutor, wait
+import multiprocessing
+
 import requests
 from lxml import etree
 import urllib.parse
-from concurrent.futures import ThreadPoolExecutor, wait
-# TODO: 添加日志打印信息
+
+from log import logger
+
 
 class WIMBCrawler(object):
     """ 抓取whatismybrowser的各种user-agent, 并且存入数据库 """
@@ -17,6 +21,7 @@ class WIMBCrawler(object):
         url = urllib.parse.urljoin(cls.site, '/useragents/explore/')
         r = cls.s.get(url)
         if r.status_code != 200:
+            logger.error('请求页面失败')
             return []
         selector = etree.HTML(r.text)
         hrefs = selector.xpath('//a[contains(text(), "Software:")]/../../ul/li/a/@href')
@@ -44,14 +49,18 @@ class WIMBCrawler(object):
         max_page = int(re.findall(r'(\d+)', max_page)[0])
 
         next_urls = [urllib.parse.urljoin(url, str(index)) for index in range(2, max_page+1)]
-        # TODO: 改成当前机器最大线程数
-        e = ThreadPoolExecutor(10)
+        e = ThreadPoolExecutor(100)
         wait([e.submit(crawl_page, next_url) for next_url in next_urls])
 
 
 if __name__ == '__main__':
     urls = WIMBCrawler.get_sorfware_urls()
-    url = urls[0]
-    print(url)
-    WIMBCrawler.get_detail_by_url(url)
-
+    logger.info('获取到所有详细页面url')
+    ps = []
+    for url in urls:
+        p = multiprocessing.Process(target=WIMBCrawler.get_detail_by_url, args=(url, ))
+        p.start()
+        ps.append(p)
+        logger.info(f'开始抓取url: {url}页面信息')
+    logger.info('等待进程完成')
+    [p.join() for p in ps]

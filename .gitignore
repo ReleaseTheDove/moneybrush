@@ -1,0 +1,5 @@
+# log dir
+log/
+
+# byte-compiled
+__pycache__/
