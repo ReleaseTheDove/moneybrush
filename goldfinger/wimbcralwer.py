@@ -1,10 +1,10 @@
 import re
 from concurrent.futures import ThreadPoolExecutor, wait
 import multiprocessing
+import urllib.parse
 
 import requests
 from lxml import etree
-import urllib.parse
 
 from log import logger
 from models import UserAgent, connectdb

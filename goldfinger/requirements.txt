@@ -1,0 +1,7 @@
+--index https://pypi.python.org/simple/
+
+requests==2.18.4
+lxml==4.2.1
+yamo==0.2.30
+logbook==1.1.0
+selenium==3.12.0

@@ -1,2 +1,5 @@
 # moneybrush
-RT
+
+
+## config env
+`pip install -r requirements.txt`
