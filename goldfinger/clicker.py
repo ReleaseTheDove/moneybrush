@@ -60,7 +60,7 @@ class Browser(object):
         self.action.double_click().perform()
 
     def enter_single_key(self, key):
-        """Enter the key by keyboard."""        
+        """Enter the key by keyboard."""
         self.action.key_down(key).perform()
         self.action.key_up(key).perform()
 
@@ -75,4 +75,5 @@ class Browser(object):
 
 if __name__ == '__main__':
     b = Browser()
-    b.go('https://www.baidu.com')
+    # b.go('https://www.baidu.com')
+    b.go('http://www.absgamer.club')
