@@ -1,9 +1,13 @@
-from flask import Flask, request, jsonify
-from models import Article
 import hashlib
 import time
 
+from flask import Flask, request, jsonify
+
+from models import Article, Game, Ip
+
+
 app = Flask(__name__)
+
 
 @app.route('/')
 def hello_world():
