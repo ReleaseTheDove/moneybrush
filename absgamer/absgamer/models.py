@@ -102,7 +102,7 @@ class Game(Base, Extension):
     score = Column('score', Float, default=0)
     category = Column('category', String(32), index=True, nullable=False)
     url = Column('url', String(255))
-    brief = Column('content', Text, nullable=False)
+    brief = Column('brief', Text, nullable=False)
     public_at = Column('public_at', DateTime, default=datetime.now)
     run_status = Column('run_status', Integer, default=0)
     operator = Column('operator', String(255))
