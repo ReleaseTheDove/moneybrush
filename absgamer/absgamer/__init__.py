@@ -1,5 +1,5 @@
 from flask import Blueprint
-from models import session
+from .models import session
 
 api = Blueprint('api', __name__)
 
@@ -8,5 +8,6 @@ api = Blueprint('api', __name__)
 def handle_teardown_request(exception):
     "Dealing at the aftermath."
     session.remove()
+
 
 from absgamer.views import article, game
