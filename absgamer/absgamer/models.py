@@ -102,6 +102,7 @@ class Game(Base, Extension):
     score = Column('score', Float, default=0)
     category = Column('category', String(32), index=True, nullable=False)
     url = Column('url', String(255))
+    thumbnail = Column('thumbnail', String(255))
     brief = Column('brief', Text, nullable=False)
     public_at = Column('public_at', DateTime, default=datetime.now)
     run_status = Column('run_status', Integer, default=0)
