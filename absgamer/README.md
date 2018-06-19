@@ -9,6 +9,8 @@ alembic init alembic
 
 > Config *alembic.ini*, setting up the SQLAlchemy URL:
 
+**If config for remote uri, then the remote database would be upgrade**
+
 ```python
 sqlalchemy.url = mysql+pymysql://root:root@localhost/absgamer?charset=utf8
 ```
@@ -40,3 +42,45 @@ alembic upgrade head
 ```
 
 Repeat the two steps, you can complete the migration.
+
+> Partial Revision Identifiers
+
+```bash
+alembic upgrade 1975ea83b712
+```
+
+> Relative Migration Identifiers
+
+```bash
+alembic upgrade +2
+
+alembic downgrade -1
+
+alembic upgrade 1975ea83b712+2
+```
+
+> Getting Infomation
+
+View the current revision:
+
+```bash
+alembic current
+```
+
+### Auto generate script for upgrading
+
+Edit the file *env.py*, config the variable `target_metadata`, like:
+```python
+import os
+import sys
+sys.path.append(os.path.dirname(os.path.abspath(__file__)) + '/../../')
+from absgamer.models import Base
+target_metadata = Base.metadata
+```
+
+We can get the migration-script by running command:
+```bash
+alembic revision --autogenerate -m "Auto generate tables"
+```
+
+## [Document for more detail](http://alembic.zzzcomputing.com/en/latest/tutorial.html)
