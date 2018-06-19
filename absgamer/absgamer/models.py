@@ -1,6 +1,5 @@
 from datetime import datetime
 import uuid
-import os
 
 from sqlalchemy import (create_engine, ForeignKey, Column, Integer,
                         String, Text, DateTime, TIMESTAMP, and_, or_, SmallInteger,
@@ -8,10 +7,8 @@ from sqlalchemy import (create_engine, ForeignKey, Column, Integer,
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import scoped_session, sessionmaker
 
+from config import mysql_user, mysql_password, mysql_host
 
-mysql_user = os.getenv('mysql_user')
-mysql_password = os.getenv('mysql_password')
-mysql_host = os.getenv('mysql_host')
 
 engine = create_engine(
             'mysql+pymysql://{}:{}@{}:3306/absgamer?charset=utf8'
