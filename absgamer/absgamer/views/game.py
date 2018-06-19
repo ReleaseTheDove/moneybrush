@@ -1,13 +1,15 @@
-from flask import request, jsonify, make_response
+from flask import request, jsonify, make_response, Blueprint
 
-from absgamer import api
 from absgamer.decorator import error_handle
 from absgamer.models import Game
 from absgamer.utils import pack_resp
 
 
-@api.route('/games/<id>', methods=['GET'])
-@api.route('/games', methods=['GET'])
+game = Blueprint('game', __name__)
+
+
+@game.route('/<id>', methods=['GET'])
+@game.route('/', methods=['GET'])
 @error_handle
 def get_games(id=None):
     if not id:
