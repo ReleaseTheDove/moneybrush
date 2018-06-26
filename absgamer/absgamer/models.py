@@ -6,8 +6,10 @@ from sqlalchemy import (create_engine, ForeignKey, Column, Integer,
                         Float, DECIMAL, desc, asc, Table, join, event)
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import scoped_session, sessionmaker
+from passlib.apps import custom_app_context as pwd_context
+from itsdangerous import TimedJSONWebSignatureSerializer as Serializer
 
-from config import mysql_user, mysql_password, mysql_host
+from config import mysql_user, mysql_password, mysql_host, SECRET_KEY
 
 
 engine = create_engine(
@@ -119,6 +121,28 @@ class Ip(Base, Extension):
     area = Column('area', String(32), index=True, nullable=False)
     create_at = Column('create_at', DateTime, default=datetime.now)
 
+
+class User(Base, Exception):
+    __tablename__ = 'user'
+
+    id = Column('id', String(32), primary_key=True, default=next_id)
+    username = Column('username', String(32), index=True, unique=True, nullable=False)
+    password = Column('password', String(32), index=True, nullable=False)
+    role = Column('role', Integer, default=0)
+    status = Column('status', Integer, default=0)
+    create_at = Column('create_at', DateTime, default=datetime.now, index=True)
+
+
+    def hash_password(self, password):
+        self.password = pwd_context.encrypt(password)
+
+    def verify_password(self, password):
+        return pwd_context.verify(password, self.password_hash)
+
+    def generate_auth_token(self, expiration=600):
+        s = Serializer(SECRET_KEY, expires_in=expiration)
+        return s.dumps({'id': self.id})
+        
 
 if __name__ == '__main__':
     # CREATE DATABASE absgamer CHARACTER SET utf8 COLLATE utf8_general_ci;
