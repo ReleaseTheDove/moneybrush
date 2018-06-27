@@ -19,7 +19,9 @@ def create_app():
 
     from .views.article import article
     from .views.game import game
+    from .views.user import user
     app.register_blueprint(article, url_prefix='/api/articles')
     app.register_blueprint(game, url_prefix='/api/games')
+    app.register_blueprint(user, url_prefix='/api/users')
 
     return app

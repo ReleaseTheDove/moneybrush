@@ -10,7 +10,7 @@ from passlib.apps import custom_app_context as pwd_context
 from itsdangerous import TimedJSONWebSignatureSerializer as Serializer
 
 from config import mysql_user, mysql_password, mysql_host, SECRET_KEY
-
+from absgamer.clog import logger
 
 engine = create_engine(
             'mysql+pymysql://{}:{}@{}:3306/absgamer?charset=utf8'
@@ -25,6 +25,9 @@ def next_id():
 
 
 class Extension(object):
+    """If function add, delete, update executed successfully
+    Return resource, or the error msg.
+    """
 
     @classmethod
     def add(cls, resource):
@@ -34,7 +37,7 @@ class Extension(object):
             return resource
         except Exception as e:
             session.rollback()
-            return str(e)
+            logger.error(e)
 
     @classmethod
     def delete(cls, resource):
@@ -44,7 +47,7 @@ class Extension(object):
             return resource
         except Exception as e:
             session.rollback()
-            return str(e)
+            logger.error(e)
 
     @classmethod
     def update(cls, resource, params={}):
@@ -54,7 +57,7 @@ class Extension(object):
             return resource
         except Exception as e:
             session.rollback()
-            return str(e)
+            logger.error(e)
 
     def to_dict(self):
         dct = {}
@@ -122,12 +125,12 @@ class Ip(Base, Extension):
     create_at = Column('create_at', DateTime, default=datetime.now)
 
 
-class User(Base, Exception):
+class User(Base, Extension):
     __tablename__ = 'user'
 
     id = Column('id', String(32), primary_key=True, default=next_id)
     username = Column('username', String(32), index=True, unique=True, nullable=False)
-    password = Column('password', String(32), index=True, nullable=False)
+    password = Column('password', String(128), index=True, nullable=False)
     role = Column('role', Integer, default=0)
     status = Column('status', Integer, default=0)
     create_at = Column('create_at', DateTime, default=datetime.now, index=True)
@@ -137,12 +140,25 @@ class User(Base, Exception):
         self.password = pwd_context.encrypt(password)
 
     def verify_password(self, password):
-        return pwd_context.verify(password, self.password_hash)
+        return pwd_context.verify(password, self.password)
 
     def generate_auth_token(self, expiration=600):
         s = Serializer(SECRET_KEY, expires_in=expiration)
         return s.dumps({'id': self.id})
-        
+
+    @staticmethod
+    def verify_auth_token(token):
+        s = Serializer(SECRET_KEY)
+        try:
+            data = s.loads(token)
+        except:
+            return
+        return User.query.get(data['id'])
+
+    @classmethod
+    def isExist(cls, username):
+        return cls.query.filter_by(username=username).first()
+
 
 if __name__ == '__main__':
     # CREATE DATABASE absgamer CHARACTER SET utf8 COLLATE utf8_general_ci;
