@@ -1,6 +1,6 @@
 from flask import request, jsonify, make_response, Blueprint
 
-from absgamer.decorator import error_handle
+from absgamer.decorator import error_handler
 from absgamer.models import Article
 from absgamer.utils import pack_resp
 
@@ -10,7 +10,7 @@ article = Blueprint('article', __name__)
 
 @article.route('/<id>', methods=['GET'])
 @article.route('/', methods=['GET'])
-@error_handle
+@error_handler
 def get_articles(id=None):
     if not id:
         articles = Article.get_all(status=0)
