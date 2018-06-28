@@ -1,5 +1,4 @@
 from flask import request, jsonify, make_response, Blueprint, g
-from flask_httpauth import HTTPBasicAuth
 
 from absgamer.decorator import error_handler, login_required
 from absgamer.models import User
@@ -7,15 +6,14 @@ from absgamer.utils import pack_resp
 
 
 user = Blueprint('user', __name__)
-auth = HTTPBasicAuth()
 
 
 @user.route('/token')
 @error_handler
 @login_required
 def get_auth_token():
-    g.token = g.user.generate_auth_token()
-    return pack_resp({'token': g.token.decode('ascii')})
+    token = g.user.generate_auth_token()
+    return pack_resp({'token': token.decode('ascii')})
 
 
 @user.route('/', methods=['POST'])
