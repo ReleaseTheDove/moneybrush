@@ -1,20 +1,23 @@
 <template>
-  <div id="test">{{text}}</div>
+  <div id="app">
+    <Header></Header>
+    <Footer></Footer>
+  </div>
 </template>
 
 <script>
+import Header from './absgamer/header.vue'
+import Footer from './absgamer/footer.jsx'
+
 export default {
-  data() {
-    return {
-      text: 'func'
-    }
+  components: {
+    Header,
+    Footer,
   }
 }
 </script>
 
 <style>
-#test{
-  color: green;
-}
+
 </style>
 

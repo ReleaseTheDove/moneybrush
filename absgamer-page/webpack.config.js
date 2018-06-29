@@ -14,11 +14,17 @@ const config = {
   module: {
     rules: [
       {test: /\.vue$/, loader: 'vue-loader'},
-      {test: /\.css$/, use: ['style-loader', 'css-loader']},
+      {test: /\.css$/,
+        use: ['vue-style-loader',
+              {loader: 'css-loader', options: {importLoaders:1}},
+              'postcss-loader']},
       {test: /\.(gif|jpe?g|png|svg)$/,
         use: [{loader: 'url-loader',
-                options: {limit: 1024, name: '[name].[hash:7].[ext]'}}]},
-      {test: /\.styl$/, use: ['style-loader', 'css-loader', 'stylus-loader']}
+              options: {limit: 1024, name: '[name].[hash:7].[ext]'}}]},
+      {test: /\.styl(us)?$/,
+        use: ['style-loader', 'css-loader', 'stylus-loader']},
+      {test: /\.jsx$/, loader: 'babel-loader'}
+      // {loader: 'postcss-loader', options: { sourceMap: true}}, 
     ]
   },
   plugins: [
