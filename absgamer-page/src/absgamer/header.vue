@@ -1,20 +1,30 @@
 <template>
   <Header class="header">
     <div class="header-content">
-      <div><a href="" class="header-logo"> Absgamer-logo-svg </a></div>
+      <div>
+        <a href="" class="header-logo">
+          <img src="../assets/images/logo.svg" alt="logo.svg">
+        </a>
+      </div>
       <div class="header-menu">
         <div class="d-flex">
           <div class="header-search">
             <div class="position-relative">
               <form method="get">
                 <label class="header-label">
-                  <input type="text" class="serach-input">
-                  <img src="https://assets-cdn.github.com/images/search-shortcut-hint.svg" alt="" class="serarch-img">
+                  <input type="text" class="serach-input" placeholder="Search">
+                  <img
+                    src="../assets/images/search-shortcut-hint.svg"
+                    alt="search-shortcut-hint.svg" class="serarch-img">
                 </label>
-                
               </form>
             </div>
           </div>
+          <ul>
+            <li><a href="" class="navlink">模拟经营</a></li>
+            <li><a href="" class="navlink">策略</a></li>
+            <li><a href="" class="navlink">moba</a></li>
+          </ul>
         </div>
         <div class="d-flex"></div>
       </div>
@@ -26,7 +36,7 @@
 export default {
   methods: {
     search() {
-
+      alert('sadfasd')
     }
   }
 }
@@ -64,49 +74,13 @@ export default {
   position relative
 .position-relative
   position relative
-.header-label
-  min-height 30px
-  font-size inherit
-  color #ffffff
-  background-color rgba(255, 255, 255, 0.125)
-  border 0
-  box-shadow none
-  width 100%
-  max-width 100%
-  padding 0
-  font-weight 400
-  vertical-align middle
-  display flex
-  position relative
-  align-items center
-  justify-content space-between
-  line-height 20px
-  background--webkit-mask-repeat no-repeat
-  background-position right 8px center
-  border-radius 3px
-  outline none
-.serach-input
-  font-size inherit
-  min-height 30px
-  color #ffffff
-  display table-cell
-  width 100%
-  padding-top 0
-  padding-bottom 0
-  background none
-  border 0
-  box-shadow none
-  padding 6px 8px
-  line-height 20px
-  vertical-align  middle
-  border-radius 3px
-  outline none
-  font-family inherit
-  overflow visiable
 .search-img
   margin-right 8px
   border-style  none
-
+.navlink
+  color rgba(255, 255, 255, 0.75)
+  padding-right 8px
+  padding-left 8px
 </style>
 
 
