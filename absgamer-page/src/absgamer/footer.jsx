@@ -8,8 +8,10 @@ export default {
   },
   render() {
     return (
-      <div id="footer">
-        <div class="footer-content">
+      <div class="footer px-3">
+        <div class="d-flex f6 pt-6 pb-2 
+          mt-6 position-relative flex-justify-between 
+          text-gray border-tray-light border-top">
           <ul class="footer-ul">
           <li class="mr-3">@ 2018 written by Simon Tribbiani.</li>
             <li class="mr-3"><a href="./">About</a></li>
