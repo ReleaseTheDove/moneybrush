@@ -18,7 +18,9 @@
                     <label 
                       class="header-label d-flex position-relative
                         flex-items-center flex-justify-between">
-                      <input type="text" class="form-control header-search-input" placeholder="Search">
+                      <input 
+                        type="text" class="form-control header-search-input" 
+                        placeholder="Search" @keyup.enter="search">
                       <img
                         src="../assets/images/search-shortcut-hint.svg"
                         alt="search-shortcut-hint.svg" class="mr-2 img">
